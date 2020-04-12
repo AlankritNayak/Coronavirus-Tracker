@@ -38,9 +38,11 @@ class APIService{
         final Map<String, dynamic> endpointData = data[0];
         final String responseJsonKey = _responseJsonKeys[endPoint];
         final int result  = endpointData[responseJsonKey];
+        final String dateString = endpointData['date'];
+        final date = DateTime.tryParse(dateString);
         if(result != null){
           return result;
-        }
+        } 
       }
     }
     print('Request $uri failed\nResponse: ${response.statusCode} ${response.reasonPhrase}');

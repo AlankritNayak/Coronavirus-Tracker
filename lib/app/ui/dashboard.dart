@@ -1,7 +1,6 @@
+import 'package:covid_rest_api/app/repositories/endPointsData.dart';
 import 'package:covid_rest_api/app/services/api.dart';
-import 'package:covid_rest_api/app/services/api_service.dart';
 import 'package:covid_rest_api/app/ui/endpoint_card.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:covid_rest_api/app/repositories/data_repository.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +11,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _cases;
+  EndpointsData _endPointData;
 
   Future<void> _updateData() async {
     final dataRepository = Provider.of<DataRepository>(context, listen: false);
-    final cases = await dataRepository.getEndpointData(EndPoint.cases);
-    setState(() => _cases = cases);
+    final endPointsData = await dataRepository.getAllEndpointData();
+    setState(() => _endPointData = endPointsData);
   }
 
   @override
@@ -36,9 +35,10 @@ class _DashboardState extends State<Dashboard> {
         onRefresh: _updateData,
         child: ListView(
           children: <Widget>[
+            for(var endPoint in EndPoint.values)
             EndpointCard(
-              endpoint: EndPoint.cases,
-              value: _cases,
+              endpoint: endPoint,
+              value: _endPointData != null ? _endPointData.values[endPoint]: null,
             ),
           ],
         ),
